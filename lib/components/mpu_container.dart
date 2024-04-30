@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -17,7 +18,7 @@ class MpuCharacteristicContainer extends StatefulWidget {
 class _BmpCharacteristicContainerState
     extends State<MpuCharacteristicContainer> {
   late StreamSubscription<List<int>>? onValueReceivedSubscription;
-  List<int> values = [0, 0, 0];
+  List<int> values = [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95];
 
   @override
   initState(){
@@ -39,6 +40,12 @@ class _BmpCharacteristicContainerState
 
   @override
   Widget build(BuildContext context) {
+    String decodedValues = utf8.decode(values);
+    String yaw = decodedValues.substring(0, 6);
+    String pitch = decodedValues.substring(6, 12);
+    String roll = decodedValues.substring(12, 18);
+
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -63,7 +70,7 @@ class _BmpCharacteristicContainerState
                   ),
                 ),
                 Text(
-                  'Yaw: ${values[0]}, Pitch: ${values[1]}, Row: ${values[2]}',
+                  'Yaw: $yaw, Pitch: $pitch, Row: $roll',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

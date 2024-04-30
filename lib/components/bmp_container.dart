@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -16,7 +17,7 @@ class BmpCharacteristicContainer extends StatefulWidget {
 
 class _BmpCharacteristicContainerState extends State<BmpCharacteristicContainer> {
   late StreamSubscription<List<int>>? onValueReceivedSubscription;
-  List<int> values = [0];
+  List<int> values = [95, 95, 95, 95, 95, 95];
 
   @override
   initState() {
@@ -37,6 +38,8 @@ class _BmpCharacteristicContainerState extends State<BmpCharacteristicContainer>
 
   @override
   Widget build(BuildContext context) {
+    String altitude = utf8.decode(values);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -59,7 +62,7 @@ class _BmpCharacteristicContainerState extends State<BmpCharacteristicContainer>
               ),
             ),
             Text(
-              '${values[0]} metros',
+              '$altitude metros',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
