@@ -136,6 +136,7 @@ class _ScanScreenState extends State<ScanScreen>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async{
@@ -160,6 +161,9 @@ class _ScanScreenState extends State<ScanScreen>{
             ),
             ),
           ListView.builder(
+            addAutomaticKeepAlives: true,
+            cacheExtent: double.infinity,
+
             itemCount: scanResult?.length,
             itemBuilder: (BuildContext context, int index){
               return DeviceInformation(scanResult: scanResult?[index]);

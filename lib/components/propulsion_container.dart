@@ -87,7 +87,10 @@ class _PropulsionTextFieldState extends State<PropulsionTextField> {
         inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.digitsOnly
         ],
-        decoration: const InputDecoration(labelText: "Delay(segundos)"),
+        decoration: const InputDecoration(
+          labelText: "Delay(segundos)",
+          border: OutlineInputBorder()
+        ),
       ),
     );
   }
