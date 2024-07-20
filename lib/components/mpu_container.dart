@@ -12,10 +12,10 @@ class MpuCharacteristicContainer extends StatefulWidget {
 
   @override
   State<MpuCharacteristicContainer> createState() =>
-      _BmpCharacteristicContainerState();
+      _MpuCharacteristicContainerState();
 }
 
-class _BmpCharacteristicContainerState
+class _MpuCharacteristicContainerState
     extends State<MpuCharacteristicContainer> {
   late StreamSubscription<List<int>>? onValueReceivedSubscription;
   List<int> values = [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95];
@@ -50,7 +50,7 @@ class _BmpCharacteristicContainerState
       padding: const EdgeInsets.all(8.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
           border: Border.all(
             color: Theme.of(context).colorScheme.secondary,
           ),

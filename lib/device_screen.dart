@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_aplication_1/components/bmp_container.dart';
 import 'package:flutter_aplication_1/components/buzz_container.dart';
+import 'package:flutter_aplication_1/components/filesystem_container.dart';
 import 'package:flutter_aplication_1/components/mpu_container.dart';
+import 'package:flutter_aplication_1/components/propulsion_container.dart';
+import 'package:flutter_aplication_1/components/servo_container.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class DeviceScreen extends StatefulWidget {
@@ -19,7 +22,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
   List<BluetoothService>? services;
   List<BluetoothCharacteristic>? deviceCharacteristics;
   StreamSubscription<BluetoothConnectionState>? connectionStateSubscription;
-  BluetoothCharacteristic? buzzCharacteristic;
+  BluetoothCharacteristic? utilsCharacteristic;
   BluetoothCharacteristic? bmpCharacteristic;
   BluetoothCharacteristic? mpuCharacteristic;
   bool _loading = false;
@@ -35,7 +38,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
           for (var characteristic in service.characteristics) {
             if (characteristic.uuid ==
                 Guid('beb5483e-36e1-4688-b7f5-ea07361b26a8')) {
-              buzzCharacteristic = characteristic;
+              utilsCharacteristic = characteristic;
             }
             if (characteristic.uuid == Guid('cba1d466-344c-4be3-ab3f-189f80dd7518')){
               bmpCharacteristic = characteristic;
@@ -48,7 +51,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
         });
       }
       if (state == BluetoothConnectionState.disconnected) {
-        buzzCharacteristic = null;
+        utilsCharacteristic = null;
         mpuCharacteristic = null;
         bmpCharacteristic = null;
         deviceCharacteristics = [];
@@ -101,14 +104,19 @@ class _DeviceScreenState extends State<DeviceScreen> {
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       body: Column(
         children: [
-          if (buzzCharacteristic != null)
-            BuzzCharacteristicContainer(buzzCharacteristic: buzzCharacteristic),
           if (bmpCharacteristic != null)
             BmpCharacteristicContainer(bmpCharacteristic: bmpCharacteristic),
-          if (buzzCharacteristic != null)
+          if (mpuCharacteristic != null)
             MpuCharacteristicContainer(mpuCharacteristic: mpuCharacteristic),
+          if (utilsCharacteristic != null) ...[
+            BuzzCharacteristicContainer(buzzCharacteristic: utilsCharacteristic),
+            FileSystemCharacteristicContainer(filesystemCharacteristic: utilsCharacteristic),
+            ServoCharacteristicContainer(servoCharacteristic: utilsCharacteristic),
+          ],
         ],
       ),
+      floatingActionButton: utilsCharacteristic != null ? PropulsionCharacteristicContainer(propulsionCharacteristic: utilsCharacteristic) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

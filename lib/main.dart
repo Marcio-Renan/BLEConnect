@@ -209,7 +209,7 @@ class _DeviceInformationState extends State<DeviceInformation>{
       child: Container(
         height: 98,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
           border: Border.all(
             color: Theme.of(context).colorScheme.secondary,
           ),
