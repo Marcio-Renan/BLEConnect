@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -7,36 +5,30 @@ class BuzzCharacteristicContainer extends StatefulWidget {
   const BuzzCharacteristicContainer({
     super.key,
     required this.buzzCharacteristic,
+    required this.isBuzzActive
   });
 
   final BluetoothCharacteristic? buzzCharacteristic;
+  final bool isBuzzActive;
 
   @override
-  State<BuzzCharacteristicContainer> createState() => _BuzzCharacteristicContainerState();
+  State<BuzzCharacteristicContainer> createState() =>
+      _BuzzCharacteristicContainerState();
 }
 
-class _BuzzCharacteristicContainerState extends State<BuzzCharacteristicContainer> {
-  late StreamSubscription<List<int>>? onValueReceivedSubscription;
-  bool buzzActive = false;
-  List<bool>isSelected = [false];
+class _BuzzCharacteristicContainerState
+    extends State<BuzzCharacteristicContainer> {
+  bool isLoading = false;
+  late List<bool> isSelected = [widget.isBuzzActive];
 
-    @override
-  initState() {
-    super.initState();
-    widget.buzzCharacteristic?.setNotifyValue(true).whenComplete(() {
-      onValueReceivedSubscription = widget.buzzCharacteristic?.onValueReceived.listen((value) {
-        if(value[0] == 0){
-          buzzActive = value[1] as bool;
-        }
-        setState((){});
-      });
+  handleOnPress(int index) {
+    setState(() => isLoading = true);
+    widget.buzzCharacteristic?.write([0, isSelected[index] == true ? 0 : 1],
+        withoutResponse: true).whenComplete(() {
+      isLoading = false;
+      isSelected[index] = !isSelected[index];
+      setState(() {});
     });
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    onValueReceivedSubscription?.cancel();
   }
 
   @override
@@ -63,19 +55,18 @@ class _BuzzCharacteristicContainerState extends State<BuzzCharacteristicContaine
                   fontSize: 25,
                 ),
               ),
-              ToggleButtons(
-                borderRadius: const BorderRadius.all(Radius.circular(50)),
-                onPressed: (int index) async{
-                  buzzActive ? await widget.buzzCharacteristic?.write([0x00, 0x00]) : await widget.buzzCharacteristic?.write([0x00, 0x01]);
-                  isSelected[index] = buzzActive;
-                },
-                isSelected: isSelected,
-                children: const [
-                  Icon(
-                    Icons.audiotrack,
-                  ),
-                ],
-              ),
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : ToggleButtons(
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      onPressed: handleOnPress,
+                      isSelected: isSelected,
+                      children: const [
+                        Icon(
+                          Icons.audiotrack,
+                        ),
+                      ],
+                    ),
             ],
           ),
         ),

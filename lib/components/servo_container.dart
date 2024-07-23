@@ -16,8 +16,8 @@ class _ServoCharacteristicContainerState extends State<ServoCharacteristicContai
   double _currentSliderValue = 0;
 
   onCurrentSliderValueChange(double value){
-    widget.servoCharacteristic?.write([1, value as int]);
     setState(() => _currentSliderValue = value);
+    widget.servoCharacteristic?.write([1, value.round()], withoutResponse: true);
   }
 
   @override

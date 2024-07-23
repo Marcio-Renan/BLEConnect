@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class FileSystemCharacteristicContainer extends StatefulWidget {
-  const FileSystemCharacteristicContainer(
-      {super.key, required this.filesystemCharacteristic});
+  const FileSystemCharacteristicContainer({
+    super.key,
+    required this.filesystemCharacteristic,
+    required this.isWriting,
+  });
 
   final BluetoothCharacteristic? filesystemCharacteristic;
+  final bool isWriting;
 
   @override
   State<FileSystemCharacteristicContainer> createState() =>
@@ -14,6 +18,18 @@ class FileSystemCharacteristicContainer extends StatefulWidget {
 
 class _FileSystemCharacteristicContainerState
     extends State<FileSystemCharacteristicContainer> {
+  late bool isWriting = widget.isWriting;
+  bool isWriteButtonLoading = false;
+
+  handleWriteButtonPress(){
+    setState(() => isWriteButtonLoading = true);
+    widget.filesystemCharacteristic?.write([2, 1, isWriting ? 0 : 1]).whenComplete((){
+      isWriting = !isWriting;
+      isWriteButtonLoading = false;
+      setState((){});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,7 +56,7 @@ class _FileSystemCharacteristicContainerState
                   ),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
                       onPressed: () {
@@ -49,21 +65,18 @@ class _FileSystemCharacteristicContainerState
                       child: const Text(
                         "Formatar",
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold
-                        ),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        widget.filesystemCharacteristic?.write([2, 1]);
-                      },
-                      child: const Text(
-                        "Escrever?",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold
-                        ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isWriting ? Colors.green : Colors.red,
+                      ),
+                      onPressed: isWriteButtonLoading ? null : handleWriteButtonPress,
+                      child: Text(
+                        isWriting ? "Escrevendo" : "Escrever?",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     ElevatedButton(
@@ -73,9 +86,7 @@ class _FileSystemCharacteristicContainerState
                       child: const Text(
                         "Ler",
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold
-                        ),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
