@@ -45,6 +45,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
                 isBuzzActive = values[0] == 0 ? false : true;
                 isWriting = values[1] == 0 ? false : true;
                 utilsCharacteristic = characteristic;
+                setState((){});
               });
             }
             if (characteristic.uuid ==

@@ -23,8 +23,7 @@ class _BuzzCharacteristicContainerState
 
   handleOnPress(int index) {
     setState(() => isLoading = true);
-    widget.buzzCharacteristic?.write([0, isSelected[index] == true ? 0 : 1],
-        withoutResponse: true).whenComplete(() {
+    widget.buzzCharacteristic?.write([0, isSelected[index] == true ? 0 : 1]).whenComplete(() {
       isLoading = false;
       isSelected[index] = !isSelected[index];
       setState(() {});

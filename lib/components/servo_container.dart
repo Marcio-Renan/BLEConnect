@@ -14,10 +14,18 @@ class ServoCharacteristicContainer extends StatefulWidget{
 
 class _ServoCharacteristicContainerState extends State<ServoCharacteristicContainer> {
   double _currentSliderValue = 0;
+  bool isMoving = false;
 
   onCurrentSliderValueChange(double value){
-    setState(() => _currentSliderValue = value);
-    widget.servoCharacteristic?.write([1, value.round()], withoutResponse: true);
+    setState((){
+      _currentSliderValue = value;
+    });
+    if(!isMoving) {
+      widget.servoCharacteristic?.write([1, value.round()]).whenComplete((){
+      isMoving = false;
+    });
+      isMoving = true;
+    }
   }
 
   @override
