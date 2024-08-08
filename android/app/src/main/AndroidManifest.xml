@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="flutter_aplication_1"
+        android:label="Thunder Connect"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
